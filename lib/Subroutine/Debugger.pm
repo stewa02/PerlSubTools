@@ -18,13 +18,6 @@ sub MODIFY_CODE_ATTRIBUTES {
 	my $cv = B::svref_2object ( $coderef );
 	my $gv = $cv->GV;
 	my $sub = $gv->NAME;
-	open(LOG, ">execution_log");
-	print LOG "#" x 30;
-	print LOG "\nStartup: $time\n";
-	print LOG "Package: $package\n";
-	print LOG "#" x 30;
-	print LOG "\n\n";
-	close(LOG);
 	
 	foreach (@attrs) {
 		no strict "refs";
@@ -39,6 +32,13 @@ sub MODIFY_CODE_ATTRIBUTES {
 			};
 		}
 		elsif (/^LOG$/) {
+			open(LOG, ">execution_log");
+			print LOG "#" x 30;
+			print LOG "\nStartup: $time\n";
+			print LOG "Package: $package\n";
+			print LOG "#" x 30;
+			print LOG "\n\n";
+			close(LOG);
 			*{"$package::$sub"} = sub {
 				open(LOG, ">>execution_log");
 				print LOG ">$sub\n";
